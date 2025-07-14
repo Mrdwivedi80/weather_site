@@ -1,0 +1,218 @@
+```
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkyCast Weather Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f0f4f8;
+        }
+        .weather-card {
+            background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(240,240,240,0.9) 100%);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        .weather-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+        }
+        .temp-display {
+            font-size: 5rem;
+            line-height: 1;
+            background: linear-gradient(90deg, #3b82f6, #1d4ed8);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .search-bar:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+        }
+        .weather-bg {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+        }
+    </style>
+</head>
+<body class="min-h-screen weather-bg">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Header -->
+        <header class="flex flex-col md:flex-row justify-between items-center mb-8">
+            <div class="flex items-center mb-4 md:mb-0">
+                <img src="https://placehold.co/60x60" alt="Cloud icon with sun peeking out in bright yellow and white colors" class="mr-3">
+                <h1 class="text-3xl font-bold text-white">SkyCast</h1>
+            </div>
+            <div class="relative w-full md:w-auto">
+                <input
+                    type="text"
+                    placeholder="Search for a city..."
+                    class="search-bar w-full md:w-64 px-4 py-3 rounded-full border-0 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
+                    id="searchInput"
+                />
+                <button
+                    class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-blue-500 text-white p-2 rounded-full hover:bg-blue-600 transition duration-200"
+                    id="searchBtn"
+                >
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+            <!-- Current Weather -->
+            <div class="weather-card p-6 lg:col-span-2">
+                <div class="flex flex-col md:flex-row md:items-center justify-between mb-6">
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-800" id="currentCity">Bhopal, India</h2>
+                        <p class="text-gray-600" id="currentDate">Friday, June 10, 2023</p>
+                    </div>
+                    <div class="mt-4 md:mt-0">
+                        <div class="flex items-center">
+                            <img src="https://placehold.co/100x100" alt="Illustration of scattered clouds with blue sky background" id="weatherIcon" class="w-16 h-16 mr-4">
+                            <p class="text-xl font-semibold text-gray-700 capitalize" id="weatherDesc">Partly cloudy</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex flex-col md:flex-row items-center justify-between md:items-end">
+                    <div class="text-center md:text-left mb-4 md:mb-0">
+                        <div class="temp-display font-bold text-center" id="currentTemp">32°C</div>
+                    </div>
+                    <div class="grid grid-cols-3 gap-4 w-full md:w-auto">
+                        <div class="text-center p-3 rounded-lg bg-white bg-opacity-50">
+                            <p class="text-gray-600 text-sm">Humidity</p>
+                            <p class="font-semibold text-gray-800" id="humidity">58%</p>
+                        </div>
+                        <div class="text-center p-3 rounded-lg bg-white bg-opacity-50">
+                            <p class="text-gray-600 text-sm">Wind</p>
+                            <p class="font-semibold text-gray-800" id="windSpeed">12 km/h</p>
+                        </div>
+                        <div class="text-center p-3 rounded-lg bg-white bg-opacity-50">
+                            <p class="text-gray-600 text-sm">Pressure</p>
+                            <p class="font-semibold text-gray-800" id="pressure">1012 hPa</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- UV Index and Air Quality -->
+            <div>
+                <div class="weather-card p-6 mb-6">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-4">UV Index</h3>
+                    <div class="flex items-center justify-center">
+                        <div class="relative w-32 h-32 flex items-center justify-center">
+                            <svg class="w-full h-full" viewBox="0 0 100 100">
+                                <circle cx="50" cy="50" r="45" fill="none" stroke="#e2e8f0" stroke-width="10"/>
+                                <circle cx="50" cy="50" r="45" fill="none" stroke="#3b82f6" stroke-width="10" stroke-linecap="round" stroke-dasharray="283" stroke-dashoffset="113" transform="rotate(-90 50 50)"/>
+                                <text x="50" y="55" font-family="Poppins" font-size="20" text-anchor="middle" fill="#3b82f6" font-weight="bold">Moderate</text>
+                                <text x="50" y="75" font-family="Poppins" font-size="16" text-anchor="middle" fill="#64748b">UV 5</text>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="mt-4 text-sm text-gray-600">
+                        <p>Protection required. UV levels are high even for brief exposure.</p>
+                    </div>
+                </div>
+
+                <div class="weather-card p-6">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-4">Air Quality</h3>
+                    <div class="flex items-center justify-center mb-4">
+                        <div class="relative w-32 h-32 flex items-center justify-center">
+                            <div class="w-24 h-24 rounded-full bg-green-100 flex items-center justify-center">
+                                <div class="w-20 h-20 rounded-full bg-green-200 flex items-center justify-center">
+                                    <span class="text-3xl font-bold text-green-600">62</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <p class="font-medium text-green-600">Good</p>
+                        <p class="text-sm text-gray-600 mt-1">Air quality is satisfactory.</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Hourly Forecast -->
+        <section class="weather-card p-6 mb-8">
+            <h3 class="text-xl font-semibold text-gray-800 mb-4">Hourly Forecast</h3>
+            <div class="overflow-x-auto">
+                <div class="flex space-x-6 pb-2">
+                    <div class="flex flex-col items-center w-20 flex-shrink-0">
+                        <p class="text-sm font-medium text-gray-600">Now</p>
+                        <img src="https://placehold.co/40x40" alt="Small weather icon showing sun with few clouds" class="w-10 h-10 my-2">
+                        <p class="font-semibold text-gray-800">32°</p>
+                    </div>
+                    <div class="flex flex-col items-center w-20 flex-shrink-0">
+                        <p class="text-sm font-medium text-gray-600">1 PM</p>
+                        <img src="https://placehold.co/40x40" alt="Small weather icon showing sun with few clouds" class="w-10 h-10 my-2">
+                        <p class="font-semibold text-gray-800">33°</p>
+                    </div>
+                    <div class="flex flex-col items-center w-20 flex-shrink-0">
+                        <p class="text-sm font-medium text-gray-600">2 PM</p>
+                        <img src="https://placehold.co/40x40" alt="Small weather icon showing sunny with clear sky" class="w-10 h-10 my-2">
+                        <p class="font-semibold text-gray-800">34°</p>
+                    </div>
+                    <div class="flex flex-col items-center w-20 flex-shrink-0">
+                        <p class="text-sm font-medium text-gray-600">3 PM</p>
+                        <img src="https://placehold.co/40x40" alt="Small weather icon showing sunny with clear sky" class="w-10 h-10 my-2">
+                        <p class="font-semibold text-gray-800">34°</p>
+                    </div>
+                    <div class="flex flex-col items-center w-20 flex-shrink-0">
+                        <p class="text-sm font-medium text-gray-600">4 PM</p>
+                        <img src="https://placehold.co/40x40" alt="Small weather icon showing sun with few clouds" class="w-10 h-10 my-2">
+                        <p class="font-semibold text-gray-800">33°</p>
+                    </div>
+                    <div class="flex flex-col items-center w-20 flex-shrink-0">
+                        <p class="text-sm font-medium text-gray-600">5 PM</p>
+                        <img src="https://placehold.co/40x40" alt="Small weather icon showing sun with few clouds" class="w-10 h-10 my-2">
+                        <p class="font-semibold text-gray-800">32°</p>
+                    </div>
+                    <div class="flex flex-col items-center w-20 flex-shrink-0">
+                        <p class="text-sm font-medium text-gray-600">6 PM</p>
+                        <img src="https://placehold.co/40x40" alt="Small weather icon showing sunset with orange hues" class="w-10 h-10 my-2">
+                        <p class="font-semibold text-gray-800">30°</p>
+                    </div>
+                    <div class="flex flex-col items-center w-20 flex-shrink-0">
+                        <p class="text-sm font-medium text-gray-600">7 PM</p>
+                        <img src="https://placehold.co/40x40" alt="Small weather icon showing twilight with purple hues" class="w-10 h-10 my-2">
+                        <p class="font-semibold text-gray-800">28°</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 7-Day Forecast -->
+        <section class="weather-card p-6">
+            <h3 class="text-xl font-semibold text-gray-800 mb-4">7-Day Forecast</h3>
+            <div class="space-y-3">
+                <div class="flex items-center justify-between py-2 border-b border-gray-100">
+                    <div class="flex items-center">
+                        <p class="w-24 font-medium text-gray-800">Today</p>
+                        <img src="https://placehold.co/30x30" alt="Small sun icon indicating sunny weather" class="mx-4 w-8 h-8">
+                    </div>
+                    <div class="flex space-x-4">
+                        <p class="w-12 text-right font-medium text-gray-800">34°</p>
+                        <p class="w-12 text-right font-medium text-gray-500">25°</p>
+                    </div>
+                </div>
+                <div class="flex items-center justify-between py-2 border-b border-gray-100">
+                    <div class="flex items-center">
+                        <p class="w-24 font-medium text-gray-800">Sat</p>
+                        <img src="https://placehold.co/30x30" alt="Small sun icon indicating sunny weather" class="mx-4 w-8 h-8">
+                    </div>
+                    <div class="flex space-x-4">
+                        <p class="w-12 text-right font-medium text-gray-800">35°</p>
+                        <p class="w-12 text-right font-medium text-gray-500">26°</p>
+                    </div>
+                </div>
+                <div class="flex items-center justify-between py-2 border-b border
+```
